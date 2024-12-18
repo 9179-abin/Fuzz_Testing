@@ -8,6 +8,7 @@ class ByteFuzzTest {
         if (data.length < 1) {
             return;
         }
+
         if (data[0] % 2 == 0) {
             fail();
         }

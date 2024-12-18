@@ -70,10 +70,10 @@ public class InputValidatorFuzzTest {
         String password = data.consumeRemainingAsString();
 
         // Stop fuzzing if password matches a predefined stopping condition
-        if (password.equals(STOPPING_PASSWORD)) {
-            System.err.println("Stopping condition met: Critical password detected - " + password);
-            throw new Error("Stopping condition met: Critical password found.");
-        }
+//        if (password.equals(STOPPING_PASSWORD)) {
+//            System.err.println("Stopping condition met: Critical password detected - " + password);
+//            throw new Error("Stopping condition met: Critical password found.");
+//        }
 
         // Boundary condition: Short passwords
         if (password.length() < 8) {
@@ -82,6 +82,7 @@ public class InputValidatorFuzzTest {
             } catch (IllegalArgumentException e) {
                 // Log only once per type of issue to avoid flooding output
                 System.err.println("Short password detected: " + password);
+                throw new IllegalArgumentException("Short password detected: " + password);
             }
         } else {
             try {

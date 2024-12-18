@@ -1,9 +1,11 @@
 import com.code_intelligence.jazzer.api.FuzzedDataProvider;
 import com.code_intelligence.jazzer.junit.FuzzTest;
 
-public class FuzzNativLib {
+public class NativLibFuzzTest {
 
-    // Fuzz test for the native 'add' method
+    private static final int CRITICAL_SUM = 9999; // Define the critical stopping condition result
+
+    // Fuzz test for the native 'add' method with stopping condition
     @FuzzTest
     public void fuzzerTestAdd(FuzzedDataProvider data) {
         // Create an instance of NativLib
@@ -17,23 +19,29 @@ public class FuzzNativLib {
             // Call the native 'add' method with fuzzed inputs
             int result = lib.add(a, b);
 
-            // Print the result (optional: for debugging)
+            // Print the fuzzed inputs and result (for debugging purposes)
             System.out.printf("Fuzzed Input: a = %d, b = %d, Result = %d%n", a, b, result);
 
-            // Optionally, add checks if the behavior is known
-            // For example, native add(a, b) is expected to behave like a + b
+            // Stop fuzzing if the result matches the critical stopping condition
+            if (result == CRITICAL_SUM) {
+                System.err.printf("Stopping condition met: Critical sum detected (%d + %d = %d)%n", a, b, result);
+                throw new Error("Stopping condition met: Critical result detected.");
+            }
+
+            // Optionally add a check to validate expected behavior
             int expected = a + b;
             if (result != expected) {
                 System.err.printf("Mismatch: Expected %d but got %d%n", expected, result);
                 throw new AssertionError("Native add method returned an unexpected result.");
             }
+
         } catch (UnsatisfiedLinkError e) {
             // Handle the case where the native library is not linked properly
             System.err.println("Native library not found: " + e.getMessage());
         } catch (Exception e) {
             // Catch any unexpected exceptions
             System.err.println("Exception occurred: " + e.getMessage());
-            throw e; // Rethrow to let Jazzer handle it
+            throw e; // Rethrow to let Jazzer log and detect the crash
         }
     }
 }

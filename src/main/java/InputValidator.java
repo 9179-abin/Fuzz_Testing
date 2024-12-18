@@ -15,13 +15,13 @@ public class InputValidator {
             throw new IllegalArgumentException("Input cannot be null or empty");
         }
 
-        if (input.length() > 50) {
+        if (input.length() > 10) {
             throw new IllegalArgumentException("Input is too long");
         }
 
-        if (!input.matches("^[a-zA-Z0-9 ]*$")) {
-            throw new IllegalArgumentException("Input contains invalid characters");
-        }
+//        if (!input.matches("^[a-zA-Z0-9 ]*$")) {
+//            throw new IllegalArgumentException("Input contains invalid characters");
+//        }
 
         System.out.println("Processed input: " + input);
     }
